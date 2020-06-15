@@ -1,0 +1,12 @@
+{
+  "name": "twdne3",
+  "humanname": "This Waifu Does Not Exist v3",
+  "version": "1.0.0",
+  "module": "module.py",
+  "model": {
+    "twdne3": {
+      "type": "onnx",
+      "file": "model.onnx"
+    }
+  }
+}

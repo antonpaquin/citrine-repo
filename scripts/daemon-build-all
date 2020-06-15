@@ -1,0 +1,12 @@
+#! /bin/bash
+
+SRC_DIR="$(dirname "${BASH_SOURCE[0]}")"
+cd "$SRC_DIR"
+cd ..
+
+set -ex
+
+for f in ./daemon/packages/*; do
+	f="$(echo "$f" | cut -c 19-)"
+	./scripts/daemon-build "$f"
+done

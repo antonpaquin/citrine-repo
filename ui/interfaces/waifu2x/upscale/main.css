@@ -1,0 +1,21 @@
+body {
+    background: #222;
+    color: #aaa;
+}
+
+#canvas {
+    display: block;
+    margin:  auto;
+    max-height: 60vh;
+    max-width: 60vh;
+    margin-top: 10vh;
+}
+
+#file-upload {
+    display: none;
+}
+
+#upscale {
+    display: block;
+    margin:  auto;
+}

@@ -1,0 +1,13 @@
+{
+  "name": "twdne3",
+  "human_name": "This Waifu Does Not Exist v3",
+  "views": {
+    "generate": {
+      "root": "generate",
+      "page": "main.html"
+    }
+  },
+  "requires_daemon": [
+    "twdne3"
+  ]
+}

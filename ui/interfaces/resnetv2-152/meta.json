@@ -1,0 +1,13 @@
+{
+  "name": "resnetv2-152",
+  "human_name": "ResNetV2-152",
+  "views": {
+    "classify": {
+      "root": "classify",
+      "page": "main.html"
+    }
+  },
+  "requires_daemon": [
+    "resnetv2-152"
+  ]
+}

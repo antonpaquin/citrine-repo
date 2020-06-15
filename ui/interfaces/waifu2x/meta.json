@@ -1,0 +1,13 @@
+{
+  "name": "waifu2x",
+  "human_name": "waifu2x",
+  "views": {
+    "upscale": {
+      "root": "upscale",
+      "page": "main.html"
+    }
+  },
+  "requires_daemon": [
+    "waifu2x"
+  ]
+}

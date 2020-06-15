@@ -1,0 +1,13 @@
+{
+  "name": "yolo3",
+  "human_name": "YOLO v3",
+  "views": {
+    "boxes": {
+      "root": "boxes",
+      "page": "main.html"
+    }
+  },
+  "requires_daemon": [
+    "yolo3"
+  ]
+}

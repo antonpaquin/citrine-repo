@@ -1,0 +1,12 @@
+{
+  "name": "deoldify",
+  "humanname": "deoldify",
+  "version": "1.0.0",
+  "module": "module.py",
+  "model": {
+    "deoldify_colorizer": {
+      "type": "onnx",
+      "file": "colorizer.onnx"
+    }
+  }
+}

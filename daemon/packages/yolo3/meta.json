@@ -1,0 +1,12 @@
+{
+  "name": "yolo3",
+  "humanname": "YOLO v3",
+  "version": "1.0.0",
+  "module": "module.py",
+  "model": {
+    "yolo": {
+      "type": "onnx",
+      "file": "yolov3-10.onnx"
+    }
+  }
+}

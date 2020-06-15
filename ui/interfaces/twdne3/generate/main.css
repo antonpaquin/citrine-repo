@@ -1,0 +1,33 @@
+body {
+    background: #222;
+    color: #aaa;
+}
+
+#generate-img {
+    display: block;
+    margin:  auto;
+    width: 90vw;
+    max-height: 70vh;
+    object-fit: contain;
+}
+
+#truncation-label {
+    display: block;
+    margin: auto;
+    margin-top: 80px;
+    text-align: center;
+}
+
+#truncation-slider {
+    display: block;
+    margin: auto;
+    margin-top: 20px;
+    width: 90vw;
+    max-width: 70vh;
+}
+
+#generate-btn {
+    display: block;
+    margin: auto;
+    margin-top: 80px;
+}

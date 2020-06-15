@@ -1,0 +1,12 @@
+{
+  "name": "waifu2x",
+  "humanname": "waifu2x",
+  "version": "1.0.0",
+  "module": "module.py",
+  "model": {
+    "noise1_scale2": {
+      "type": "onnx",
+      "file": "noise1_scale2.onnx"
+    }
+  }
+}

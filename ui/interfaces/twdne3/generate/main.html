@@ -1,0 +1,27 @@
+<html>
+<head>
+    <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" id="generate-img"/>
+    <label for="truncation-slider" id="truncation-label">Truncation: 0.5</label>
+    <input type="range" id="truncation-slider" min="0" max="1" value="0.5" step="0.01"/>
+    <input type="button" id="generate-btn" value="Generate">
+</body>
+<script type="text/javascript">
+var generate_img = document.getElementById("generate-img");
+var truncation_slider = document.getElementById("truncation-slider");
+var truncation_label = document.getElementById("truncation-label");
+var generate_btn = document.getElementById("generate-btn");
+
+truncation_slider.addEventListener("input", function() {
+    truncation_label.innerText = "Truncation: " + truncation_slider.value;
+});
+
+generate_btn.addEventListener("click", function() {
+    hivemindClient.run("twdne3/generate", {truncation: truncation_slider.value}, function(resp) {
+        generate_img.src = hivemindClient.getFileUrl(resp.images[0].fileresult);
+    });
+});
+</script>
+</html>

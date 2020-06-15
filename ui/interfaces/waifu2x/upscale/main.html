@@ -1,0 +1,62 @@
+<html>
+<head>
+    <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" id="upscale"/>
+    <input id="file-upload" type="file"/>
+</body>
+<script type="text/javascript">
+var canvas = document.getElementById("canvas");
+var file_upload = document.getElementById("file-upload");
+var upscale = document.getElementById("upscale");
+var classify_result;
+
+(function initialize_canvas() {
+    canvas.height = 300;
+    canvas.width = 300;
+    let ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.rect(0, 0, 300, 300);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.fillStyle = "#000000";
+    ctx.font = "16px";
+    ctx.fillText("Click to upload image", 92, 142);
+})();
+
+function process_img() {
+    let tensor = hivemindUtil.encodeImageTensor(canvas);
+    hivemindClient.run("waifu2x/upscale", {image: tensor}, showResults);
+}
+
+function showResults(results) {
+    upscale.src = hivemindClient.getFileUrl(results.images[0].fileresult);
+}
+
+canvas.addEventListener("click", function() {
+    file_upload.click();
+});
+
+file_upload.addEventListener("change", function() {
+    let file = file_upload.files[0];
+    if (file === undefined) {
+        return;
+    }
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let img = document.createElement('img');
+        img.onload = function() {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            process_img();
+        };
+        img.src = e.target.result;
+    }
+    reader.readAsDataURL(file);
+});
+</script>
+</html>

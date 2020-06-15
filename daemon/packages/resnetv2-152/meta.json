@@ -1,0 +1,12 @@
+{
+  "name": "resnetv2-152",
+  "humanname": "ResNetV2-152",
+  "version": "1.0.0",
+  "module": "module.py",
+  "model": {
+    "resnet": {
+      "type": "onnx",
+      "file": "resnet152-v2-7.onnx"
+    }
+  }
+}

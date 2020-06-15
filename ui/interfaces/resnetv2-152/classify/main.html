@@ -1,0 +1,79 @@
+<html>
+<head>
+    <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <input id="file-upload" type="file"/>
+    <table id="result-table"></table>
+</body>
+<script type="text/javascript">
+var canvas = document.getElementById("canvas");
+var file_upload = document.getElementById("file-upload");
+var result_table = document.getElementById("result-table");
+var classify_result;
+
+(function initialize_canvas() {
+    canvas.height = 300;
+    canvas.width = 300;
+    let ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.rect(0, 0, 300, 300);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.fillStyle = "#000000";
+    ctx.font = "16px";
+    ctx.fillText("Click to upload image", 92, 142);
+})();
+
+function classify() {
+    let tensor = hivemindUtil.encodeImageTensor(canvas);
+    hivemindClient.run("resnetv2-152/classify", {image: tensor}, showResults);
+}
+
+function showResults(results) {
+    classify_result = results;
+    classes = results.classes[0];
+    while (result_table.children.length) {
+        result_table.removeChild(result_table.children[0]);
+    }
+    for (let ii=0; ii<classes.length; ii++) {
+        let row = document.createElement('tr');
+
+        let result_class = document.createElement('td');
+        result_class.innerText = classes[ii].class;
+        row.appendChild(result_class);
+
+        let result_score = document.createElement('td');
+        result_score.innerText = classes[ii].score.toFixed(3);
+        row.appendChild(result_score);
+
+        result_table.appendChild(row);
+    }
+}
+
+canvas.addEventListener("click", function() {
+    file_upload.click();
+});
+
+file_upload.addEventListener("change", function() {
+    let file = file_upload.files[0];
+    if (file === undefined) {
+        return;
+    }
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let img = document.createElement('img');
+        img.onload = function() {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            classify();
+        };
+        img.src = e.target.result;
+    }
+    reader.readAsDataURL(file);
+});
+</script>
+</html>

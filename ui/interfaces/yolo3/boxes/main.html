@@ -1,0 +1,89 @@
+<html>
+<head>
+    <link rel="stylesheet" href="main.css"/>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <input id="file-upload" type="file"/>
+</body>
+<script type="text/javascript">
+var canvas = document.getElementById("canvas");
+var file_upload = document.getElementById("file-upload");
+var result_table = document.getElementById("result-table");
+var classify_result;
+
+(function initialize_canvas() {
+    canvas.height = 300;
+    canvas.width = 300;
+    let ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.rect(0, 0, 300, 300);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+    ctx.fillStyle = "#000000";
+    ctx.font = "16px";
+    ctx.fillText("Click to upload image", 92, 142);
+})();
+
+function classify() {
+    let tensor = hivemindUtil.encodeImageTensor(canvas);
+    hivemindClient.run("yolo3/run", {image: tensor}, showResults);
+}
+
+function showResults(results) {
+    let boxes = results.results;
+    let ctx = canvas.getContext("2d");
+
+    let fontsize = Math.round(Math.max(canvas.width, canvas.height)/40);
+    fontsize = Math.max(fontsize, 10);
+    ctx.font = fontsize + 'px sans-serif';
+
+    ctx.lineWidth = Math.max(Math.round(Math.max(canvas.width, canvas.height) / 200), 2);
+
+    for (let ii=0; ii<boxes.length; ii++) {
+        label = boxes[ii].class;
+        box = boxes[ii].box;
+
+        ctx.strokeStyle = '#FF0000';
+        ctx.beginPath();
+        ctx.moveTo(box[0], box[1]);
+        ctx.lineTo(box[0], box[3]);
+        ctx.lineTo(box[2], box[3]);
+        ctx.lineTo(box[2], box[1]);
+        ctx.lineTo(box[0], box[1]);
+        ctx.stroke();
+
+        let label_dim = ctx.measureText(label);
+        ctx.fillStyle = ctx.strokeStyle;
+        ctx.fillRect(box[0], box[1], label_dim.width + 4, label_dim.actualBoundingBoxAscent + label_dim.actualBoundingBoxDescent + 4);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(label, box[0] + 2, box[1] + label_dim.actualBoundingBoxAscent + 2);
+    }
+    classify_result = results.results[0];
+}
+
+canvas.addEventListener("click", function() {
+    file_upload.click();
+});
+
+file_upload.addEventListener("change", function() {
+    let file = file_upload.files[0];
+    if (file === undefined) {
+        return;
+    }
+    let reader = new FileReader();
+    reader.onload = function (e) {
+        let img = document.createElement('img');
+        img.onload = function() {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            classify();
+        };
+        img.src = e.target.result;
+    }
+    reader.readAsDataURL(file);
+});
+</script>
+</html>
