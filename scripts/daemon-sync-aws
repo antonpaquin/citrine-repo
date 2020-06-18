@@ -1,0 +1,37 @@
+#! /bin/bash
+
+SRC_DIR="$(dirname "${BASH_SOURCE[0]}")"
+cd "$SRC_DIR"
+cd ..
+
+set -ex
+
+NAME="$1"
+if [[ "$NAME" == "" ]]; then
+	echo "Provide the name of the package you want to sync"
+	exit 1
+fi
+
+S3_BUCKET="hivemind-repo"
+S3_REGION="us-west-2"
+S3_PATH="daemon/packages/$NAME/$NAME.zip"
+S3_URL="https://$S3_BUCKET.s3-$S3_REGION.amazonaws.com/$S3_PATH"
+
+pushd "daemon/zips"
+aws s3 cp "$NAME.zip" "s3://$S3_REPO/$S3_PATH"
+SHASUM="$(sha256sum "$NAME.zip" | awk '{print $1}')"
+popd
+
+git stash push
+pushd "daemon"
+INDEX_LINE="$(grep -P -e "^$NAME\|" index | cut -f1 -d:)"
+INDEX_ENTRY="$NAME|$S3_URL|$SHASUM"
+if [[ "$INDEX_LINE" == "" ]]; then
+	echo "$INDEX_ENTRY" >> index
+else
+	echo -e "$INDEX_LINE\nc\n$INDEX_ENTRY\n.\nw\nq\n" | ed index
+fi
+
+git add index
+git commit -m "autocommit: update index for $NAME"
+git stash pop
