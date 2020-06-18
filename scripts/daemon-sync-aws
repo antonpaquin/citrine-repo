@@ -18,7 +18,7 @@ S3_PATH="daemon/packages/$NAME/$NAME.zip"
 S3_URL="https://$S3_BUCKET.s3-$S3_REGION.amazonaws.com/$S3_PATH"
 
 pushd "daemon/zips"
-aws s3 cp "$NAME.zip" "s3://$S3_REPO/$S3_PATH"
+aws s3 cp "$NAME.zip" "s3://$S3_BUCKET/$S3_PATH"
 SHASUM="$(sha256sum "$NAME.zip" | awk '{print $1}')"
 popd
 
