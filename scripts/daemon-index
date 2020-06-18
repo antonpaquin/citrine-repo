@@ -1,9 +1,0 @@
-#! /bin/bash
-
-SRC_DIR="$(dirname "${BASH_SOURCE[0]}")"
-cd "$SRC_DIR"
-cd ..
-
-set -ex
-
-echo "TODO"
