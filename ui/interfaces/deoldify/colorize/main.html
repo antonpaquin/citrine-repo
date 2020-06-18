@@ -4,7 +4,6 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" id="upscale"/>
     <input id="file-upload" type="file"/>
 </body>
 <script type="text/javascript">
@@ -28,11 +27,16 @@ var classify_result;
 
 function process_img() {
     let tensor = hivemindUtil.encodeImageTensor(canvas);
-    hivemindClient.run("waifu2x/upscale", {image: tensor}, showResults);
+    hivemindClient.run("deoldify/chroma", {image: tensor}, showResults);
 }
 
 function showResults(results) {
-    upscale.src = hivemindClient.getFileUrl(results.images[0]);
+    let img = document.createElement('img');
+    img.onload = function() {
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+    };
+    img.src = hivemindClient.getFileUrl(results.images[0]);
 }
 
 canvas.addEventListener("click", function() {

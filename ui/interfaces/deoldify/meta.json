@@ -1,0 +1,13 @@
+{
+  "name": "deoldify",
+  "human_name": "deoldify",
+  "views": {
+    "colorize": {
+      "root": "colorize",
+      "page": "main.html"
+    }
+  },
+  "requires_daemon": [
+    "deoldify"
+  ]
+}

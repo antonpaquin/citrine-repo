@@ -1,0 +1,20 @@
+#! /bin/bash
+
+SRC_DIR="$(dirname "${BASH_SOURCE[0]}")"
+cd "$SRC_DIR"
+cd ..
+
+set -ex
+
+NAME="$1"
+if [[ "$NAME" == "" ]]; then
+	echo "Provide the name of the package you want to build"
+	exit 1
+fi
+
+pushd "ui/interfaces/$NAME" 
+zip -r9 "$NAME.zip" ./*
+popd
+
+
+mv "ui/interfaces/$NAME/$NAME.zip" "ui/zips/$NAME.zip"

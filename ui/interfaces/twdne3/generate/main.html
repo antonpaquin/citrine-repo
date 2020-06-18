@@ -20,7 +20,7 @@ truncation_slider.addEventListener("input", function() {
 
 generate_btn.addEventListener("click", function() {
     hivemindClient.run("twdne3/generate", {truncation: truncation_slider.value}, function(resp) {
-        generate_img.src = hivemindClient.getFileUrl(resp.images[0].fileresult);
+        generate_img.src = hivemindClient.getFileUrl(resp.images[0]);
     });
 });
 </script>
