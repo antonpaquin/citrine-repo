@@ -3,8 +3,8 @@ from typing import *
 import numpy as np
 from PIL import Image
 
-from hivemind_daemon import create_function, errors
-from hivemind_daemon.storage.result import FileHandle
+from citrine_daemon import create_function, errors
+from citrine_daemon.storage.result import FileHandle
 
 
 input_validator = {
@@ -54,7 +54,7 @@ def process_input(params: Dict) -> Tuple[Dict[str, np.ndarray], Tuple]:
     }, (pad_h, pad_w)
 
 
-def process_output(results: Dict[str, np.ndarray], pad: Tuple[int, int]) -> Dict:
+def process_output_pil(results: Dict[str, np.ndarray], pad: Tuple[int, int]) -> Dict:
     upscale = results['upscale']
     unpad = [slice(None) for _ in range(4)]
     if pad[0]:
@@ -73,10 +73,36 @@ def process_output(results: Dict[str, np.ndarray], pad: Tuple[int, int]) -> Dict
     return {'images': images}
 
 
+def process_output_tensor(results: Dict[str, np.ndarray], pad: Tuple[int, int]) -> Dict:
+    upscale = results['upscale']
+    unpad = [slice(None) for _ in range(4)]
+    if pad[0]:
+        unpad[2] = slice(0, -2)
+    if pad[1]:
+        unpad[3] = slice(0, -2)
+    upscale = upscale[tuple(unpad)]
+
+    images = []
+    for x in upscale:
+        x = x.transpose([1, 2, 0])
+        x = (x * 255).astype('uint8')
+        images.append(x)
+    return {'images': images}
+
+
 create_function(
     name='upscale',
     model='noise1_scale2',
     process_input=process_input,
-    process_output=process_output,
+    process_output=process_output_pil,
+    input_validator=input_validator,
+)
+
+
+create_function(
+    name='upscale_tensor',
+    model='noise1_scale2',
+    process_input=process_input,
+    process_output=process_output_tensor,
     input_validator=input_validator,
 )

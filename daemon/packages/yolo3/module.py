@@ -3,7 +3,7 @@ from typing import *
 import numpy as np
 from PIL import Image
 
-from hivemind_daemon import create_function
+from citrine_daemon import create_function
 
 
 input_validator = {

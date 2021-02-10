@@ -3,8 +3,8 @@ from typing import Dict
 import numpy as np
 from PIL import Image
 
-from hivemind_daemon import create_function
-from hivemind_daemon.storage.result import FileHandle
+from citrine_daemon import create_function
+from citrine_daemon.storage.result import FileHandle
 
 
 input_validator = {
